@@ -55,4 +55,19 @@ public class InteiroPositivo
         divisores += "Quantidade de Divisores: "+qtdDivisores;
         return divisores;
     }
+
+    public int[] fibonacci(){
+        int seq[] = new int[this.x];
+        if (this.x > 0){
+            seq[0] = 1;
+            if (this.x > 1){
+                seq[1] = 1;
+            }
+        }
+        for (int i = 2;i < this.x; i++){
+            seq[i] = seq[i-2] + seq[i-1];
+        }
+        return seq;
+    }
+
 }
