@@ -1,9 +1,9 @@
 
 /**
- * Escreva uma descriÃ§Ã£o da classe Contribuinte aqui.
+ * Escreva uma descrição da classe Contribuinte aqui.
  * 
  * @author (seu nome) 
- * @version (um nÃºmero da versÃ£o ou uma data)
+ * @version (um número da versão ou uma data)
  */
 public class Contribuinte
 {
