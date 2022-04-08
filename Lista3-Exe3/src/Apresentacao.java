@@ -25,6 +25,7 @@ import javax.swing.JCheckBox;
 public class Apresentacao extends javax.swing.JFrame {
 
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private Agenda agenda = new Agenda();
 
 	/** Creates new form Apresentacao */
 	public Apresentacao() {
@@ -141,6 +142,11 @@ public class Apresentacao extends javax.swing.JFrame {
 		tfDataCompromisso.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
+				LocalDate data = LocalDate.parse(tfDataCompromisso.getText(),formatter);
+				
+				if (!agenda.existeData(data)) {
+					JOptionPane.showMessageDialog(null,"Data ainda não existe. Insira na aba anterior");
+				}
 			}
 		});
 		tfDataCompromisso.setColumns(10);
@@ -302,18 +308,95 @@ public class Apresentacao extends javax.swing.JFrame {
 	}
 
 	private void jBInserirCompromissoActionPerformed(java.awt.event.ActionEvent evt) {		
+		LocalDate data = LocalDate.parse(tfDataCompromisso.getText(),formatter);
+		DataAgenda diaExistente = agenda.getData(data);
+		String msg;
+		if (diaExistente == null) {
+			msg = "Compromisso não criado pois data ainda não existe. Insira na aba anterior";
 		}
+		else {
+			char prioridade;
+			if (jRadioButton1.isSelected()) {
+				prioridade = 'A';
+			}
+			else if (jRadioButton2.isSelected()) {
+				prioridade = 'N';
+			}
+			else {
+				prioridade = 'B';
+			}
+			LocalTime lt = LocalTime.parse(tfHora.getText());
+			Compromisso compromisso = new Compromisso(lt, 
+										tfDescricao.getText(),
+										Integer.parseInt(tfTempo.getText()),
+										prioridade);
+			if (diaExistente.addCompromisso(compromisso)) {
+				msg = "Compromisso incluído";
+			}
+			else {
+				msg = "Horário conflitante";
+			}
+		}
+		JOptionPane.showMessageDialog(null,msg);
+	}
 
 	private void jBTempoMedioActionPerformed(java.awt.event.ActionEvent evt) {
+		LocalDate dataDigitada = LocalDate.parse(tfDataConsulta.getText(), formatter);
+		DataAgenda atual = agenda.getData(dataDigitada);
+		String msg;
+		if (atual == null) {
+			msg = "Dia não cadastrado";
+		}
+		else {
+			msg = "Tempo médio dos compromissos de "+atual.getData()+" : "+atual.getTempoMedio();
+		}
+		jTAConsultas.setText(msg);
 	}
 
 	private void jBIncluirNaAgendaActionPerformed(java.awt.event.ActionEvent evt) {
+		LocalDate data = LocalDate.parse(tfData.getText(),formatter);
+		DataAgenda diaExistente = agenda.getData(data);
+		String msg;
+		if (diaExistente == null) {
+			DataAgenda novoDia = new DataAgenda(data,tfEfemeride.getText());
+			agenda.addData(novoDia);
+			msg = "Data incluída";
+		}
+		else {
+			msg = "Dia já existe na agenda!";
+			msg += "\nQuantidade de Compromissos Prioridade ALTA: "+diaExistente.getQtdCompromissosPrioridade('A');
+			msg += diaExistente.mostrarCompromissos();
+		}
+		JOptionPane.showMessageDialog(this,msg);
 	}
 
 	private void jBCompromissosDiaPrioridadeActionPerformed(java.awt.event.ActionEvent evt) {
+		LocalDate dataDigitada = LocalDate.parse(tfDataConsulta.getText(), formatter);
+		DataAgenda atual = agenda.getData(dataDigitada);
+		String msg;
+		if (atual == null) {
+			msg = "Dia não cadastrado";
+		}
+		else {
+			msg = "Compromissos de "+atual.getData()+" com prioridade "+ jComboBox1.getSelectedItem();
+			ArrayList<Compromisso> resultado = atual.getCompromissosPrioridade(jComboBox1.getSelectedItem().toString().charAt(0));
+			for (Compromisso c: resultado) {
+				msg += "\n"+c.toString();
+			}
+		}
+		jTAConsultas.setText(msg);
 	}
 
 	private void jBMenorCompromissoActionPerformed(java.awt.event.ActionEvent evt) {
+		Compromisso menor = agenda.getMenorCompromisso();
+		String msg;
+		if (menor == null) {
+			msg = "Não há compromissos cadastrados";
+		}
+		else {
+			msg = "Menor compromisso da Agenda\n"+menor.toString();
+		}
+		jTAConsultas.setText(msg);
 	}
 
 	/**
