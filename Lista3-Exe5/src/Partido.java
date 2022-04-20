@@ -1,10 +1,18 @@
 import java.util.ArrayList;
+import java.util.Collection;
+
 public class Partido {
     private String nome;
     private int numero;
     private ArrayList<Vereador> vereadores = new ArrayList<Vereador>();
     
-    public String getNome() {
+    public Partido(int numero, String nome) {
+		super();
+		this.setNome(nome);
+		this.setNumero(numero);
+	}
+    
+	public String getNome() {
         return nome;
     }
     public void setNome(String nome) {
@@ -17,6 +25,10 @@ public class Partido {
         if (numero >= 10 && numero < 100) {
             this.numero = numero;
         }
+    }
+    
+    public ArrayList<Vereador> getVereadores(){
+    	return this.vereadores;   // cuidado com isso
     }
     
     public void addVereador(Vereador v) {
@@ -59,4 +71,18 @@ public class Partido {
         }
         return total;
     }
+    
+    public int getQtdeVereadores() {
+    	return this.vereadores.size();
+    }
+
+	public ArrayList<Vereador> getVereadoresDesempAcima(double valor) {
+		ArrayList<Vereador> retorno = new ArrayList<>();
+		for (Vereador v: this.vereadores) {
+			if (v.getDesempenho() > valor) {
+				retorno.add(v);
+			}
+		}
+		return retorno;
+	}
 }
