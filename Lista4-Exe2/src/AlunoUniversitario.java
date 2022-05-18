@@ -54,7 +54,7 @@ public class AlunoUniversitario extends Aluno {
     }
     @Override
     public String mostra() {
-        return this.getNome() + "é aluno universitario do curso de " + this.curso.getSigla() + "-_-"
-                + this.curso.getNome() + "ingressando por" + this.getFormaIngressoExtenso();
+        return this.getNome() + " é aluno universitario do curso de " + this.curso.getSigla() + "-"
+                + this.curso.getNome() + " ingressando por " + this.getFormaIngressoExtenso();
     }
 }

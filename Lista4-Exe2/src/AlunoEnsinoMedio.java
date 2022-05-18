@@ -23,7 +23,7 @@ public class AlunoEnsinoMedio extends Aluno {
     }
     @Override
     public String mostra() {
-        return this.getNome() + "está cursando o " + this.ano + "o ano do ensino medio e tem" + this.getIdade()
+        return this.getNome() + " está cursando o " + this.ano + "o ano do ensino medio e tem " + this.getIdade()
                 + "anos";
     }
 }
