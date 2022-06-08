@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class ClimaDoDia implements Serializable {  // contribuição do Mauricio Dill
+public class ClimaDoDia implements Serializable {  // contribuiÃ§Ã£o do Mauricio Dill
 
 	private LocalDate Date;
 	private String ventoDirecao;
