@@ -20,6 +20,14 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class Apresentacao {
 
@@ -57,6 +65,27 @@ public class Apresentacao {
 	 */
 	public Apresentacao() {
 		initialize();
+		carregarDados();
+	}
+
+	private void carregarDados() {
+		try {
+			FileInputStream fis = new FileInputStream("DadosAlunosCursos.obj");
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			cursos = (HashMap<String, Curso>) ois.readObject();
+			alunos = (ArrayList<Aluno>) ois.readObject();
+			for (Curso c: cursos.values()) {
+				cbCursos.addItem(c);
+			}
+			
+		} catch (FileNotFoundException fnfe) {
+			JOptionPane.showMessageDialog(frame, "Primeira execução. Ainda não há dados");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
@@ -64,6 +93,21 @@ public class Apresentacao {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// salvar os dados
+				try {
+					FileOutputStream fos = new FileOutputStream("DadosAlunosCursos.obj");
+					ObjectOutputStream oos = new ObjectOutputStream(fos);
+					oos.writeObject(cursos);
+					oos.writeObject(alunos);
+					oos.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+		});
 		frame.setBounds(100, 100, 620, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -191,6 +235,7 @@ public class Apresentacao {
 				try {
 					Curso c = new Curso(tfSigla.getText(), tfCurso.getText());
 					cbCursos.addItem(c);
+					cursos.put(c.getSigla(), c);
 				} catch (IllegalArgumentException iae) {
 					JOptionPane.showMessageDialog(frame, iae.getMessage());
 				}

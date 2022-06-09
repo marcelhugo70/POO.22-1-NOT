@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 
-public abstract class Aluno implements Comparable<Aluno> {
+public abstract class Aluno implements Comparable<Aluno>, Serializable {
 	private String nome;
 	private LocalDate dataNascimento;
 
